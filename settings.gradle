@@ -1,0 +1,5 @@
+rootProject.name = 'bookstore'
+include 'bookstoreAPI'
+include 'bookstoreGUI'
+include 'bookstore2GUI'
+
