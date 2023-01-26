@@ -8,11 +8,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static org.example.RedirectUtils.redirect;
+
 @WebServlet("/seeBorrowsBooks")
 public class CustomerSeeBorrowsServlet extends HttpServlet {
+
+    private final CustomerFacade customerFacade = FacadeSingletones.getCustomerFacade();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        request.setAttribute("borrowedBooks", customerFacade.getBorrowedBooksTitles());
+        redirect(request, response, "CustomerSeeBorrowsView.jsp");
     }
 
     @Override

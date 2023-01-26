@@ -17,20 +17,23 @@
     <c:set var="books" value="${books}" scope="request"/>
 
     <c:if test="${not empty books}">
-        <form action=""
-        <c:forEach var="book" items="${books}">
-            <p>
-                <input type="radio" name="book" id="book" value="book">
-                <label for="book">${book}</label>
+        <form action="borrowBook" method="post">
+            <c:forEach var="book" items="${books}">
+                <p>
+                    <input type="radio" name="book" id="book" value="${book}">
+                    <label for="book">${book}</label>
+                </p>
+            </c:forEach>
+            <button type="submit">Borrow</button>
+            <p id="feedback">
+                <c:out value="${feedback}"> </c:out>
             </p>
-        </c:forEach>
+        </form>
     </c:if>
-
-
-    <p>
-        <input type="radio" name="animal" id="cat" value="cat">
-        <label for="cat">cat</label>
-    </p>
+    <c:if test="${empty books}">
+        <p>There is no available book to borrow</p>
+    </c:if>
 </fieldset>
+    <button type="button"><a href="customerMenu">Back</a></button>
 </body>
 </html>

@@ -29,8 +29,9 @@
                 <c:out value="${feedback}"> </c:out>
             </p>
         </fieldset>
-            <button type="button"><a href="/">Back</a></button>
     </form>
+
+    <button type="button"><a href="/">Back</a></button>
 
 </body>
 </html>

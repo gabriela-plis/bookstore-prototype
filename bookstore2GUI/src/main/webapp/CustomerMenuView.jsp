@@ -11,8 +11,14 @@
     <title>Bookstore</title>
 </head>
 <body>
-    <button type="button"><a href="borrowBook">Borrow a book</a></button>
-    <button type="button"><a href="seeBorrowsBooks">See current borrows</a></button>
-    <button type="button"><a href="returnBook">Return a book</a></button>
+    <p>
+        <button type="button"><a href="borrowBook">Borrow a book</a></button>
+    </p>
+    <p>
+        <button type="button"><a href="seeBorrowsBooks">See current borrows</a></button>
+    </p>
+    <p>
+        <button type="button"><a href="returnBook">Return a book</a></button>
+    </p>
 </body>
 </html>

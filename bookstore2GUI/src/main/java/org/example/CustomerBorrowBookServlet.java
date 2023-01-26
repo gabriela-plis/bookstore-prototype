@@ -23,6 +23,18 @@ public class CustomerBorrowBookServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String selectedBook = request.getParameter("book");
+        System.out.println(selectedBook);
 
+        if (selectedBook == null) {
+            throw new IllegalArgumentException("Null object");
+        }
+
+        booksFacade.updateBookAfterBorrow(selectedBook);
+        customerFacade.borrowBook(selectedBook);
+
+        request.setAttribute("books", booksFacade.getAvailableBooksToBorrow(customerFacade));
+        request.setAttribute("feedback", "You borrowed book successfully!");
+        redirect(request,response,"CustomerBorrowBookView.jsp");
     }
 }
