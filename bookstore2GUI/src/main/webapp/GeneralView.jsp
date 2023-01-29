@@ -7,8 +7,8 @@
 <body>
     <p>Customer</p>
     <button type="button"><a href="customerLogIn">LogIn</a></button>
-    <button type="button"><a href="">Register</a></button>
+    <button type="button"><a href="customerRegistration">Register</a></button>
     <p>Employee</p>
-    <button type="button"><a href="">LogIn</a></button>
+    <button type="button"><a href="employeeLogIn">LogIn</a></button>
 </body>
 </html>

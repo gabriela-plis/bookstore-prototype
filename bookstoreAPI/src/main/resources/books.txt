@@ -4,4 +4,4 @@ The Higgler,A.E. Coppard,Romance,2016,10,2,3,true
 The Dancing Partner:Clocks,Jerome K.Jerome,Comedy,2010,5,1,4,false
 Jane Eyre,Charlotte Bronte,Novel,2017,9,1,5,true
 Sense and Sensibility,Jane Austen,Novel,1811,6,4,6,true
-Dracula,Stoker Bram,Horror,2018,15,0,7,false
+Dracula,Stoker Bram,Horror,2018,10,0,7,false
