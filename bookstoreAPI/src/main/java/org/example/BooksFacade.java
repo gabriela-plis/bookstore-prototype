@@ -6,7 +6,7 @@ import java.util.Objects;
 public class BooksFacade {
 
     private static final String BOOK_DB_URL = Paths.BOOKS.getPath();
-    private final Database<Book> database;
+    private final Database<BookDeprec> database;
 
 
 
@@ -19,7 +19,7 @@ public class BooksFacade {
 
         return database.getAll().stream()
                 .filter(book -> book.getAvailableAmount() > 0 && book.isCanBeBorrow())
-                .map(Book::getTitle)
+                .map(BookDeprec::getTitle)
                 .filter( title -> !facade.getPerson().getBorrowedBooks().isContains(title))
                 .sorted()
                 .toList();
@@ -29,7 +29,7 @@ public class BooksFacade {
     public List<String> getAvailableBooksToRemove () {
         return database.getAll().stream()
                 .filter(book -> book.getBorrowedAmount() == 0)
-                .map(Book::getTitle)
+                .map(BookDeprec::getTitle)
                 .toList();
     }
 
@@ -40,7 +40,7 @@ public class BooksFacade {
             throw new IllegalArgumentException();
         }
 
-        Book book = database.get(key);
+        BookDeprec book = database.get(key);
         book.decrementAvailableAmount();
         book.incrementBorrowedAmount();
 
@@ -54,7 +54,7 @@ public class BooksFacade {
             throw new IllegalArgumentException();
         }
 
-        Book book = database.get(key);
+        BookDeprec book = database.get(key);
         book.incrementAvailableAmount();
         book.decrementBorrowedAmount();
 
@@ -73,14 +73,14 @@ public class BooksFacade {
     }
 
     public void add (String title, String author, String series, String publishYear, boolean canBeBorrow, int amount) {
-        database.add(new Book(title, author, series, publishYear, amount, canBeBorrow, database.getAssignID() ));
+        database.add(new BookDeprec(title, author, series, publishYear, amount, canBeBorrow, database.getAssignID() ));
         database.update();
     }
 
-    private int getKeyToBooksDatabase (List<Book> books, String title) {
+    private int getKeyToBooksDatabase (List<BookDeprec> books, String title) {
         return books.stream()
                 .filter(book -> Objects.equals(book.getTitle(), title))
-                .map(Book::getID)
+                .map(BookDeprec::getID)
                 .findAny()
                 .orElse(-1);
     }

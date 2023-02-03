@@ -13,7 +13,7 @@ public class GeneralFacade<T extends DBObject> {
     //mapa klucz jako klasa, która rozszerza DBObject, a value to metoda Supplier zwracająca obiekt- database (Czemu supplier? lazyyy; równie dobrze na samym początku mogłyby być tworzone czyli database)
     // czyli jeśli jest customer to value to metoda zwracająca database o URL bazy customerów
     private static final Map<Class<? extends DBObject>, Supplier<Database<? extends DBObject>>> databases = Map.of(
-            Book.class, () -> new Database<>(BOOK_DB_URL, new BookDBObjectConverter()),
+            BookDeprec.class, () -> new Database<>(BOOK_DB_URL, new BookDBObjectConverter()),
             Customer.class, () -> new Database<>(CUSTOMER_DB_URL, new CustomerDBObjectConverter()),
             Employee.class, () -> new Database<>(EMPLOYEE_DB_URL, new EmployeeDBObjectConverter())
     );

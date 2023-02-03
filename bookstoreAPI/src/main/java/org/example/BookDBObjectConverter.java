@@ -3,20 +3,20 @@ package org.example;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class BookDBObjectConverter implements DBObjectConverter<Book>{
+public class BookDBObjectConverter implements DBObjectConverter<BookDeprec>{
 
     @Override
-    public String parseToFileLine(Book book) {
+    public String parseToFileLine(BookDeprec book) {
         return book.read();
     }
 
     @Override
-    public Book parseFromFileLine(String line) {
+    public BookDeprec parseFromFileLine(String line) {
 
         ArrayList<String> separatedData = new ArrayList<>();
         Collections.addAll(separatedData, line.split(","));
 
-        return new Book(separatedData.get(0),separatedData.get(1),separatedData.get(2),separatedData.get(3), Integer.parseInt(separatedData.get(4)), Integer.parseInt(separatedData.get(5)), Integer.parseInt(separatedData.get(6)), Boolean.parseBoolean(separatedData.get(7)));
+        return new BookDeprec(separatedData.get(0),separatedData.get(1),separatedData.get(2),separatedData.get(3), Integer.parseInt(separatedData.get(4)), Integer.parseInt(separatedData.get(5)), Integer.parseInt(separatedData.get(6)), Boolean.parseBoolean(separatedData.get(7)));
 
     }
 }
