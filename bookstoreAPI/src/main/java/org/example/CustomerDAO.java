@@ -5,6 +5,7 @@ import static org.example.DAOConfig.*;
 public class CustomerDAO {
 
     private static final String USER_EXISTS_QUERY = "SELECT EXISTS (SELECT * FROM customers WHERE id = ? AND password = ?);";
+    private static final String SELECT_USER_QUERY = "SELECT * FROM customers WHERE id = ?";
     private static final String BORROW_QUERY = "INSERT INTO customers_to_books (customer_id, book_id) VALUES ( ? , ? );";
     private static final String RETURN_QUERY = "DELETE FROM customers_to_books WHERE customer_id = ? AND book_id = ?;";
     private static final String REGISTER_QUERY = """
@@ -15,7 +16,30 @@ public class CustomerDAO {
 
     private int ID;
 
-    public boolean isLogIn(int id, String password) throws SQLException {
+    public Customer getCustomer (int id, String password) throws SQLException {
+
+        if (existsInDB(id, password)) {
+
+            try (Connection connection = connect();
+                 PreparedStatement st = connection.prepareStatement(SELECT_USER_QUERY)) {
+
+                st.setInt(1, id);
+
+                ResultSet rs = st.executeQuery();
+
+                if (rs.next()) {
+                    return new Customer(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name"), rs.getString("phone"), rs.getString("email"));
+                }
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return null;
+    }
+
+    private boolean existsInDB (int id, String password) {
 
         try (Connection connection = connect();
              PreparedStatement st = connection.prepareStatement(USER_EXISTS_QUERY)) {
