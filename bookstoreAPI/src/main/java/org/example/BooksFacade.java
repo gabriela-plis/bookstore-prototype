@@ -5,83 +5,21 @@ import java.util.Objects;
 
 public class BooksFacade {
 
-    private static final String BOOK_DB_URL = Paths.BOOKS.getPath();
-    private final Database<BookDeprec> database;
-
-
+    private final BooksDAO booksDAO;
 
     public BooksFacade () {
-        this.database = new Database<>(BOOK_DB_URL, new BookDBObjectConverter());
-        this.database.load();
+        this.booksDAO = new BooksDAO();
     }
 
-    public List<String> getAvailableBooksToBorrow (CustomerFacade facade) {
-
-        return database.getAll().stream()
-                .filter(book -> book.getAvailableAmount() > 0 && book.isCanBeBorrow())
-                .map(BookDeprec::getTitle)
-                .filter( title -> !facade.getPerson().getBorrowedBooks().isContains(title))
-                .sorted()
-                .toList();
-
+    public List<Book> getAvailableBooksToBorrow (CustomerFacade facade) {
+        return booksDAO.getAvailableBooksToBorrow();
     }
 
-    public List<String> getAvailableBooksToRemove () {
-        return database.getAll().stream()
-                .filter(book -> book.getBorrowedAmount() == 0)
-                .map(BookDeprec::getTitle)
-                .toList();
+    public List<Book> getAvailableBooksToRemove () {
+        return booksDAO.getAvailableBooksToRemove();
     }
 
-    public void updateBookAfterBorrow (String title) {
-        int key = getKeyToBooksDatabase(database.getAll(), title);
-
-        if (key == -1) {
-            throw new IllegalArgumentException();
-        }
-
-        BookDeprec book = database.get(key);
-        book.decrementAvailableAmount();
-        book.incrementBorrowedAmount();
-
-        database.update();
-    }
-
-    public void updateBookAfterReturn (String title) {
-        int key = getKeyToBooksDatabase(database.getAll(), title);
-
-        if (key == -1) {
-            throw new IllegalArgumentException();
-        }
-
-        BookDeprec book = database.get(key);
-        book.incrementAvailableAmount();
-        book.decrementBorrowedAmount();
-
-        database.update();
-    }
-
-    public void remove (String title) {
-        int key = getKeyToBooksDatabase(database.getAll(), title);
-
-        if (key == -1) {
-            throw new IllegalArgumentException();
-        }
-
-        database.delete(key);
-        database.update();
-    }
-
-    public void add (String title, String author, String series, String publishYear, boolean canBeBorrow, int amount) {
-        database.add(new BookDeprec(title, author, series, publishYear, amount, canBeBorrow, database.getAssignID() ));
-        database.update();
-    }
-
-    private int getKeyToBooksDatabase (List<BookDeprec> books, String title) {
-        return books.stream()
-                .filter(book -> Objects.equals(book.getTitle(), title))
-                .map(BookDeprec::getID)
-                .findAny()
-                .orElse(-1);
+    public List<Book> getAvailableBooksToReturn (int customerID) {
+        return booksDAO.getCustomersBorrows(customerID);
     }
 }

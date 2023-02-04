@@ -4,58 +4,35 @@ import java.util.List;
 
 public class CustomerFacade {
 
-    private static final String CUSTOMER_DB_URL = Paths.CUSTOMERS.getPath();
-    Database<Customer> database;
-    Customer person;
+    private final CustomerDAO customerDAO;
+    private final BooksDAO booksDAO;
 
-    public CustomerFacade() {
-        this.database = new Database<>(CUSTOMER_DB_URL, new CustomerDBObjectConverter());
-        this.database.load();
-        this.person = null;
+    public CustomerFacade () {
+        this.customerDAO = new CustomerDAO();
+        this.booksDAO = new BooksDAO();
     }
 
-    public boolean isLogIn(int ID, String password) {
-
-        if (database.isContains(ID) && database.get(ID).getSensitiveData().getPassword().equals(password)) {
-            person = database.get(ID);
-            return true;
-        }
-
-        return false;
+    public Customer getCustomer (int id, String password) {
+        return customerDAO.getCustomer(id, password);
     }
+
 
     public void register (String firstName, String lastName, String phone, String password, String email) {
-
-        Customer newCustomer = new Customer(database.getAssignID(), password, firstName, lastName, phone, email);
-        database.add(newCustomer);
-        database.update();
-
-        person = newCustomer;
-
+        customerDAO.register(firstName, lastName, phone, email, password);
     }
 
-    public boolean wasRegisterSuccessful () {
-        return !person.equals(null);
+    public void borrowBook (int customerID, int bookID) {
+        customerDAO.borrowBook(customerID, bookID);
+        booksDAO.updateAfterBorrow(bookID);
     }
 
-
-    public void borrowBook (String title) {
-        person.getBorrowedBooks().add(title);
-        database.update();
-
-
+    public List<Book> getBorrowedBooksTitles (int customerID) {
+        return booksDAO.getCustomersBorrows(customerID);
     }
 
-    public List<String> getBorrowedBooksTitles () {
-        return person.getBorrowedBooks().getAllTitles();
+    public void returnBook (int customerID, int bookID) {
+        customerDAO.returnBook(customerID, bookID);
+        booksDAO.updateAfterReturn(bookID);
     }
 
-    public void returnBook (String title) {
-        person.getBorrowedBooks().remove(title);
-        database.update();
-    }
-
-    public Customer getPerson () {
-        return person;
-    }
 }
