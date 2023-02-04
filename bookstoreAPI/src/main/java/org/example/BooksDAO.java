@@ -74,16 +74,23 @@ public class BooksDAO {
         }
     }
 
-    private List<Book> createListOfBooks (ResultSet rs) throws SQLException {
+    private List<Book> createListOfBooks (ResultSet rs) {
 
-        List<Book> books = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                List<Book> books = new ArrayList<>();
 
-        while (rs.next()) {
-            Book book = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("author"), rs.getInt("publish_year"), rs.getBoolean("can_be_borrow"), rs.getInt("available_amount"), rs.getString("type"));
-            books.add(book);
+                Book book = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("author"), rs.getInt("publish_year"), rs.getBoolean("can_be_borrow"), rs.getInt("available_amount"), rs.getString("type"));
+                books.add(book);
+
+                return books;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
-        return books;
+        return null;
     }
 
     public List<BookType> getBookTypes() {
@@ -131,6 +138,36 @@ public class BooksDAO {
             st.setBoolean(4, can_be_borrow);
             st.setInt(5, available_amount);
             st.setInt(6, typeID);
+
+            st.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void updateAfterBorrow (int bookID) {
+
+        try (Connection connection = connect();
+             PreparedStatement st = connection.prepareStatement(BORROW_QUERY)) {
+
+            st.setInt(1, bookID);
+
+            st.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void updateAfterReturn (int bookID) {
+
+        try (Connection connection = connect();
+             PreparedStatement st = connection.prepareStatement(RETURN_QUERY)) {
+
+            st.setInt(1, bookID);
 
             st.executeUpdate();
 

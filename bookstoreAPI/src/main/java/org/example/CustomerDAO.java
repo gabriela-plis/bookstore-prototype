@@ -16,14 +16,14 @@ public class CustomerDAO {
 
     private int ID;
 
-    public Customer getCustomer (int id, String password) throws SQLException {
+    public Customer getCustomer (int ID, String password) {
 
-        if (existsInDB(id, password)) {
+        if (existsInDB(ID, password)) {
 
             try (Connection connection = connect();
                  PreparedStatement st = connection.prepareStatement(SELECT_USER_QUERY)) {
 
-                st.setInt(1, id);
+                st.setInt(1, ID);
 
                 ResultSet rs = st.executeQuery();
 
@@ -39,12 +39,12 @@ public class CustomerDAO {
         return null;
     }
 
-    private boolean existsInDB (int id, String password) {
+    private boolean existsInDB (int ID, String password) {
 
         try (Connection connection = connect();
              PreparedStatement st = connection.prepareStatement(USER_EXISTS_QUERY)) {
 
-            st.setInt(1, id);
+            st.setInt(1, ID);
             st.setString(2, password);
 
             ResultSet rs = st.executeQuery();
@@ -61,13 +61,13 @@ public class CustomerDAO {
 
     }
 
-    public void borrowBook(int customerId, int bookId) {
+    public void borrowBook(int customerID, int bookID) {
 
         try (Connection connection = connect();
              PreparedStatement st = connection.prepareStatement(BORROW_QUERY)) {
 
-            st.setInt(1, customerId);
-            st.setInt(2, bookId);
+            st.setInt(1, customerID);
+            st.setInt(2, bookID);
 
             st.executeUpdate();
         } catch (SQLException e) {
@@ -76,12 +76,12 @@ public class CustomerDAO {
 
     }
 
-    public void returnBook(int customerId, int bookId) throws SQLException {
+    public void returnBook(int customerID, int bookID) {
         try (Connection connection = connect();
              PreparedStatement st = connection.prepareStatement(RETURN_QUERY)) {
 
-            st.setInt(1, customerId);
-            st.setInt(2, bookId);
+            st.setInt(1, customerID);
+            st.setInt(2, bookID);
 
             st.executeUpdate();
         } catch (SQLException e) {
@@ -110,10 +110,6 @@ public class CustomerDAO {
             throw new RuntimeException(e);
         }
 
-    }
-
-    public int getID() {
-        return this.ID;
     }
 
     private Connection connect() throws SQLException {
