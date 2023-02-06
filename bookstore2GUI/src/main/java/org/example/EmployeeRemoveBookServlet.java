@@ -8,14 +8,16 @@ import java.io.IOException;
 import static org.example.RedirectUtils.redirect;
 
 @WebServlet("/removeBook")
-public class EmployeeRemoveBookServlet extends HttpServlet {
+public class EmployeeRemoveBookServlet extends HttpServlet implements SessionConsumer {
 
-    private final EmployeeFacade employeeFacade = FacadeSingletons.getEmployeeFacade();
-    private final BooksFacade booksFacade = FacadeSingletons.getBooksFacade();
+    private EmployeeFacade employeeFacade;
+    private BooksFacade booksFacade;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("booksToRemove", booksFacade.getAvailableBooksToRemove().stream().map(Book::title));
+        getSessionAttributes(request);
+
+        request.setAttribute("booksToRemove", booksFacade.getAvailableBooksToRemove().stream().map(Book::title).toList());
         redirect(request, response, "EmployeeRemoveBookView.jsp");
     }
 
@@ -28,8 +30,15 @@ public class EmployeeRemoveBookServlet extends HttpServlet {
         employeeFacade.removeBook( booksFacade.getBookID(selectedBook) );
 
 
-        request.setAttribute("booksToRemove", booksFacade.getAvailableBooksToRemove());
+        request.setAttribute("booksToRemove", booksFacade.getAvailableBooksToRemove().stream().map(Book::title).toList());
         request.setAttribute("feedback", "The book has been removed");
         redirect(request, response, "EmployeeRemoveBookView.jsp");
+    }
+
+    @Override
+    public void getSessionAttributes(HttpServletRequest request) {
+        HttpSession session = getSession(request);
+        employeeFacade = (EmployeeFacade) session.getAttribute("employeeFacade");
+        booksFacade = (BooksFacade) session.getAttribute("booksFacade");
     }
 }

@@ -17,8 +17,8 @@ public class CustomerFacade {
     }
 
 
-    public void register (String firstName, String lastName, String phone, String password, String email) {
-        customerDAO.register(firstName, lastName, phone, email, password);
+    public int register (String firstName, String lastName, String phone, String password, String email) {
+        return customerDAO.register(firstName, lastName, phone, email, password);
     }
 
     public void borrowBook (int customerID, int bookID) {

@@ -5,35 +5,48 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static org.example.RedirectUtils.redirect;
 
 @WebServlet("/borrowBook")
-public class CustomerBorrowBookServlet extends HttpServlet {
+public class CustomerBorrowBookServlet extends HttpServlet implements SessionConsumer {
 
-    private final CustomerFacade customerFacade = FacadeSingletons.getCustomerFacade();
-    private final BooksFacade booksFacade = FacadeSingletons.getBooksFacade();
+    private CustomerFacade customerFacade;
+    private BooksFacade booksFacade;
+    private int customerID;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("books", booksFacade.getAvailableBooksToBorrow(UserSingletons.getCustomer().ID()).stream().map(Book::title).toList());
+        getSessionAttributes(request);
+
+        request.setAttribute("books", booksFacade.getAvailableBooksToBorrow(customerID).stream().map(Book::title).toList());
         redirect(request, response, "CustomerBorrowBookView.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String selectedBook = request.getParameter("book");
-        System.out.println(selectedBook);
 
         if (selectedBook == null) {
-            throw new IllegalArgumentException("Null object");
+            throw new IllegalArgumentException();
         }
 
-        customerFacade.borrowBook(UserSingletons.getCustomer().ID(), booksFacade.getBookID(selectedBook));
+        customerFacade.borrowBook(customerID, booksFacade.getBookID(selectedBook));
 
-        request.setAttribute("books", booksFacade.getAvailableBooksToBorrow(UserSingletons.getCustomer().ID()).stream().map(Book::title).toList());
+        request.setAttribute("books", booksFacade.getAvailableBooksToBorrow(customerID).stream().map(Book::title).toList());
         request.setAttribute("feedback", "You borrowed book successfully!");
+
         redirect(request,response,"CustomerBorrowBookView.jsp");
+    }
+
+    @Override
+    public void getSessionAttributes(HttpServletRequest request) {
+        HttpSession session = getSession(request);
+
+        this.customerFacade = (CustomerFacade) session.getAttribute("customerFacade");
+        this.booksFacade = (BooksFacade) session.getAttribute("booksFacade");
+        this.customerID = (int) session.getAttribute("customerID");
     }
 }

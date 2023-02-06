@@ -89,7 +89,7 @@ public class CustomerDAO {
         }
     }
 
-    public void register(String firstName, String lastName, String phone, String email, String password) {
+    public int register(String firstName, String lastName, String phone, String email, String password) {
 
         try (Connection connection = connect();
              PreparedStatement st = connection.prepareStatement(REGISTER_QUERY)) {
@@ -103,13 +103,14 @@ public class CustomerDAO {
             ResultSet rs = st.executeQuery();
 
             if (rs.next()) {
-                this.ID = rs.getInt("id");
+                return rs.getInt("id");
             }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
+        return -1;
     }
 
     private Connection connect() throws SQLException {

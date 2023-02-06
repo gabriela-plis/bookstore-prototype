@@ -3,7 +3,7 @@ package org.example;
 import java.util.Objects;
 
 @Deprecated
-public class BookDeprec implements DBObject, Readable {
+public class BookDeprec {
     private final String title;
     private final String author;
     private final String series;
