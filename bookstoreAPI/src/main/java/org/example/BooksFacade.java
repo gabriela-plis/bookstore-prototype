@@ -11,8 +11,8 @@ public class BooksFacade {
         this.booksDAO = new BooksDAO();
     }
 
-    public List<Book> getAvailableBooksToBorrow (CustomerFacade facade) {
-        return booksDAO.getAvailableBooksToBorrow();
+    public List<Book> getAvailableBooksToBorrow (int customerID) {
+        return booksDAO.getAvailableBooksToBorrow(customerID);
     }
 
     public List<Book> getAvailableBooksToRemove () {
@@ -21,5 +21,17 @@ public class BooksFacade {
 
     public List<Book> getAvailableBooksToReturn (int customerID) {
         return booksDAO.getCustomersBorrows(customerID);
+    }
+
+    public int getBookID (String title) {
+        return booksDAO.getBookID(title);
+    }
+
+    public int getBookTypeID (String type) {
+        return booksDAO.getBookTypeID(type);
+    }
+
+    public List<BookType> getBookTypes () {
+        return booksDAO.getBookTypes();
     }
 }

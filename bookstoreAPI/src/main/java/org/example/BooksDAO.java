@@ -10,7 +10,7 @@ public class BooksDAO {
     private static final String BORROW_QUERY = "UPDATE books SET available_amount = available_amount -1 WHERE id = ? ;";
     private static final String RETURN_QUERY = "UPDATE books SET available_amount = available_amount +1 WHERE id = ? ;";
     private static final String SELECT_AVAILABLE_BOOK_TO_BORROW_QUERY = """
-            SELECT books.id, title, author, publish_year, can_be_borrow, available_amount, name AS type FROM books
+            SELECT DISTINCT books.id, title, author, publish_year, can_be_borrow, available_amount, name AS type FROM books
             LEFT JOIN customers_to_books ON books.id = customers_to_books.book_id JOIN book_types ON books.type_id = book_types.id
             WHERE books.id NOT IN (SELECT book_id FROM customers_to_books WHERE customer_id = ? ) AND can_be_borrow = 'true' AND available_amount > 0;
             """;
@@ -27,12 +27,17 @@ public class BooksDAO {
     private static final String REMOVE_BOOK_QUERY = "DELETE FROM books WHERE id = ? ;";
     private static final String ADD_BOOK_QUERY = "INSERT INTO books (title, author, publish_year, can_be_borrow, available_amount, type_id) VALUES ( ? , ? , ? , ? , ? , ? );";
     private static final String SELECT_BOOK_TYPES_QUERY = "SELECT * FROM book_types;";
+    private static final String GET_BOOK_ID_QUERY = "SELECT id FROM books WHERE title = ? ";
+    private static final String GET_TYPE_ID_QUERY = "SELECT id FROM book_types WHERE name = ? ";
 
 
-    public List<Book> getAvailableBooksToBorrow() {
+
+    public List<Book> getAvailableBooksToBorrow(int customerID) {
 
         try (Connection connection = connect();
              PreparedStatement st = connection.prepareStatement(SELECT_AVAILABLE_BOOK_TO_BORROW_QUERY)) {
+
+            st.setInt(1, customerID);
 
             ResultSet rs = st.executeQuery();
 
@@ -77,20 +82,20 @@ public class BooksDAO {
     private List<Book> createListOfBooks (ResultSet rs) {
 
         try {
+            List<Book> books = new ArrayList<>();
+
             while (rs.next()) {
-                List<Book> books = new ArrayList<>();
 
                 Book book = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("author"), rs.getInt("publish_year"), rs.getBoolean("can_be_borrow"), rs.getInt("available_amount"), rs.getString("type"));
                 books.add(book);
-
-                return books;
             }
+
+            return books;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return null;
     }
 
     public List<BookType> getBookTypes() {
@@ -175,6 +180,33 @@ public class BooksDAO {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public int getBookID (String title) {
+        return getID(title, GET_BOOK_ID_QUERY);
+    }
+
+    public int getBookTypeID (String type) {
+        return getID(type, GET_TYPE_ID_QUERY);
+    }
+
+    private int getID(String strRepresentation, String query) {
+        try (Connection connection = connect();
+             PreparedStatement st = connection.prepareStatement(query)) {
+
+            st.setString(1, strRepresentation);
+
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                return rs.getInt("id");
+            }
+
+        } catch ( SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return -1;
     }
 
     private Connection connect() throws SQLException {

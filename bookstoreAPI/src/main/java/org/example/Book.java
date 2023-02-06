@@ -10,4 +10,9 @@ public record Book(
         String type
         ) {
 
+        @Override
+        public String toString() {
+                StringBuilder sb = new StringBuilder();
+                return sb.append(ID).append(",").append(title).append(",").append(author).append(",").append(publishYear).append(",").append(canBeBorrow).append(",").append(availableAmount).append(",").append(type).toString();
+        }
 }
