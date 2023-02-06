@@ -1,5 +1,0 @@
-1,ko123,Ania,Malak,123456789,aniom@gmail.com,[The Higgler]
-2,do123,Pawel,Slick,123456789,abg@gmail.com,[The Grass is Always Greener]
-3,gienia123,Genowefa,Kotowska,123456789,genowefa123@gmail.com,[Murder!_The Dancing Partner:Clocks_Sense and Sensibility]
-4,Viola!,Violetta,Kowalska,123456789,violettaCh@gmail.com,[The Higgler]
-55,Andrej,Sjergiej,123456789,andrej23,andr@gmail.com,[]
