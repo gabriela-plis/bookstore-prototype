@@ -13,28 +13,34 @@ import static org.example.RedirectUtils.redirect;
 @WebServlet("/returnBook")
 public class CustomerReturnBookServlet extends HttpServlet {
 
-    private final CustomerFacade customerFacade = FacadeSingletones.getCustomerFacade();
-    private final BooksFacade booksFacade = FacadeSingletones.getBooksFacade();
+    private final CustomerFacade customerFacade = FacadeSingletons.getCustomerFacade();
+    private final BooksFacade booksFacade = FacadeSingletons.getBooksFacade();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("borrowedBooks", customerFacade.getBorrowedBooksTitles());
+//        HttpSession session = request.getSession(false);
+
+        request.setAttribute("borrowedBooks", booksFacade.getAvailableBooksToReturn( UserSingletons.getCustomer().ID()).stream().map(Book::title).toList() );
         redirect(request, response, "CustomerReturnBookView.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        String selectedBook = request.getParameter("book");
         String selectedBook = request.getParameter("book");
 
         if (selectedBook == null) {
             throw new IllegalArgumentException("Null object");
         }
 
-        customerFacade.returnBook(selectedBook);
-        booksFacade.updateBookAfterReturn(selectedBook);
+
+        customerFacade.returnBook(UserSingletons.getCustomer().ID(), booksFacade.getBookID(selectedBook));
 
         request.setAttribute("feedback", "You returned book successfully!");
-        request.setAttribute("borrowedBooks", customerFacade.getBorrowedBooksTitles());
+
+//        HttpSession session = request.getSession(false);
+        request.setAttribute("borrowedBooks", booksFacade.getAvailableBooksToReturn( UserSingletons.getCustomer().ID()).stream().map(Book::title).toList());
+
         redirect(request, response, "CustomerReturnBookView.jsp");
 
     }

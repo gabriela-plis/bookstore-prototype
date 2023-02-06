@@ -10,19 +10,22 @@ import static org.example.RedirectUtils.redirect;
 @WebServlet("/removeBook")
 public class EmployeeRemoveBookServlet extends HttpServlet {
 
-    private final BooksFacade booksFacade = FacadeSingletones.getBooksFacade();
+    private final EmployeeFacade employeeFacade = FacadeSingletons.getEmployeeFacade();
+    private final BooksFacade booksFacade = FacadeSingletons.getBooksFacade();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("booksToRemove", booksFacade.getAvailableBooksToRemove());
+        request.setAttribute("booksToRemove", booksFacade.getAvailableBooksToRemove().stream().map(Book::title));
         redirect(request, response, "EmployeeRemoveBookView.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String selectedBook = request.getParameter("bookToRemove");
 
-        System.out.println(request.getParameter("bookToRemove"));
-        booksFacade.remove(request.getParameter("bookToRemove"));
+        System.out.println(selectedBook);
+
+        employeeFacade.removeBook( booksFacade.getBookID(selectedBook) );
 
 
         request.setAttribute("booksToRemove", booksFacade.getAvailableBooksToRemove());

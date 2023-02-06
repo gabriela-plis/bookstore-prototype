@@ -22,7 +22,7 @@ public class CurrentBorrowsView extends Application implements ViewsNavigation {
     }
     @Override
     public void start(Stage window) throws Exception {
-        List<String> borrowedBooks = customerFacade.getBorrowedBooksTitles();
+        List<String> borrowedBooks = customerFacade.getBorrowedBooks();
 
         ListView<String> bookListView = new ListView<>();
         for (String title : borrowedBooks) {

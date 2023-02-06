@@ -31,7 +31,7 @@
         </fieldset>
     </form>
 
-    <button type="button"><a href="/">Back</a></button>
+    <button type="button"><a href="/bookstore">Back</a></button>
 
 </body>
 </html>

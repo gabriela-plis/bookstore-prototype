@@ -24,8 +24,18 @@
                 <input type="text" name="author" id="author" required>
             </p>
             <p>
-                <%--@declare id="series"--%><label for="series">Series:</label>
-                <input type="text" name="series" id="series" required>
+                <%--@declare id="bookType"--%><label for="bookType">Book type:</label>
+<%--                    <c:set var="bookTypes" value="${bookTypes}" scope="request"/>--%>
+                    <select name="bookType" id="bookType">
+
+                        <c:forEach var="type" items="${bookTypes}" >
+                            <option value="${type}" ${type == selectedType ? 'selected' : ''}>${type}</option>
+                        </c:forEach>
+<%--                        <option value="apple">apple</option>--%>
+<%--                        <option value="raspberry" selected>raspberry</option>--%>
+                    </select>
+<%--                    &lt;%&ndash;@declare id="bookType"&ndash;%&gt;<label for="bookType">Book type:</label>--%>
+
             </p>
             <p>
                 <%--@declare id="publishyear"--%><label for="publishYear">Publish year:</label>

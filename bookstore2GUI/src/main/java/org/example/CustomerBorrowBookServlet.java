@@ -12,12 +12,12 @@ import static org.example.RedirectUtils.redirect;
 @WebServlet("/borrowBook")
 public class CustomerBorrowBookServlet extends HttpServlet {
 
-    private final CustomerFacade customerFacade = FacadeSingletones.getCustomerFacade();
-    private final BooksFacade booksFacade = FacadeSingletones.getBooksFacade();
+    private final CustomerFacade customerFacade = FacadeSingletons.getCustomerFacade();
+    private final BooksFacade booksFacade = FacadeSingletons.getBooksFacade();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("books", booksFacade.getAvailableBooksToBorrow(customerFacade));
+        request.setAttribute("books", booksFacade.getAvailableBooksToBorrow(UserSingletons.getCustomer().ID()).stream().map(Book::title).toList());
         redirect(request, response, "CustomerBorrowBookView.jsp");
     }
 
@@ -30,10 +30,9 @@ public class CustomerBorrowBookServlet extends HttpServlet {
             throw new IllegalArgumentException("Null object");
         }
 
-        booksFacade.updateBookAfterBorrow(selectedBook);
-        customerFacade.borrowBook(selectedBook);
+        customerFacade.borrowBook(UserSingletons.getCustomer().ID(), booksFacade.getBookID(selectedBook));
 
-        request.setAttribute("books", booksFacade.getAvailableBooksToBorrow(customerFacade));
+        request.setAttribute("books", booksFacade.getAvailableBooksToBorrow(UserSingletons.getCustomer().ID()).stream().map(Book::title).toList());
         request.setAttribute("feedback", "You borrowed book successfully!");
         redirect(request,response,"CustomerBorrowBookView.jsp");
     }

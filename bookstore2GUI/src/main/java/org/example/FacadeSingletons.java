@@ -1,6 +1,6 @@
 package org.example;
 
-public class FacadeSingletones {
+public class FacadeSingletons {
 
     private static final CustomerFacade customerFacade = new CustomerFacade();
     private static final EmployeeFacade employeeFacade = new EmployeeFacade();

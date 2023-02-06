@@ -26,7 +26,7 @@ public class CustomerFacade {
         booksDAO.updateAfterBorrow(bookID);
     }
 
-    public List<Book> getBorrowedBooksTitles (int customerID) {
+    public List<Book> getBorrowedBooks (int customerID) {
         return booksDAO.getCustomersBorrows(customerID);
     }
 

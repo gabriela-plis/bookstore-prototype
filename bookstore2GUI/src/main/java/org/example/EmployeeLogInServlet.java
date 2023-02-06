@@ -10,7 +10,7 @@ import static org.example.RedirectUtils.redirect;
 @WebServlet("/employeeLogIn")
 public class EmployeeLogInServlet extends HttpServlet {
 
-    private final EmployeeFacade employeeFacade = FacadeSingletones.getEmployeeFacade();
+    private final EmployeeFacade employeeFacade = FacadeSingletons.getEmployeeFacade();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
