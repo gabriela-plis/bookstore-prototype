@@ -10,8 +10,8 @@ import static org.example.RedirectUtils.redirect;
 @WebServlet("/removeBook")
 public class EmployeeRemoveBookServlet extends HttpServlet implements SessionConsumer {
 
-    private EmployeeFacade employeeFacade;
-    private BooksFacade booksFacade;
+    private final EmployeeFacade employeeFacade = FacadeSingletons.getEmployeeFacade();
+    private final BooksFacade booksFacade = FacadeSingletons.getBooksFacade();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -36,9 +36,5 @@ public class EmployeeRemoveBookServlet extends HttpServlet implements SessionCon
     }
 
     @Override
-    public void getSessionAttributes(HttpServletRequest request) {
-        HttpSession session = getSession(request);
-        employeeFacade = (EmployeeFacade) session.getAttribute("employeeFacade");
-        booksFacade = (BooksFacade) session.getAttribute("booksFacade");
-    }
+    public void getSessionAttributes(HttpServletRequest request) {}
 }

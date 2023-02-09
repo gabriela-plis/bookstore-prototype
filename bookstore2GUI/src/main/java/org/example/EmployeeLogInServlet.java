@@ -10,7 +10,7 @@ import static org.example.RedirectUtils.redirect;
 @WebServlet("/employeeLogIn")
 public class EmployeeLogInServlet extends HttpServlet implements SessionCreator {
 
-    private EmployeeFacade employeeFacade;
+    private final EmployeeFacade employeeFacade = FacadeSingletons.getEmployeeFacade();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -19,9 +19,9 @@ public class EmployeeLogInServlet extends HttpServlet implements SessionCreator 
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        employeeFacade = new EmployeeFacade();
 
         if (employeeFacade.isLogIn(Integer.parseInt(request.getParameter("ID")), request.getParameter("password"))) {
+
             HttpSession session = createSession(request);
             setSessionAttributes(request, session);
 
@@ -33,8 +33,5 @@ public class EmployeeLogInServlet extends HttpServlet implements SessionCreator 
     }
 
     @Override
-    public void setSessionAttributes(HttpServletRequest request, HttpSession session) {
-        session.setAttribute("employeeFacade", employeeFacade);
-        session.setAttribute("booksFacade", new BooksFacade());
-    }
+    public void setSessionAttributes(HttpServletRequest request, HttpSession session) {}
 }

@@ -12,6 +12,11 @@ public class CustomerFacade {
         this.booksDAO = new BooksDAO();
     }
 
+    public CustomerFacade (String DB_URL, String DB_USER, String DB_PASS) {
+        this.customerDAO = new CustomerDAO(DB_URL, DB_USER, DB_PASS);
+        this.booksDAO = new BooksDAO(DB_URL, DB_USER, DB_PASS);
+    }
+
     public Customer getCustomer (int id, String password) {
         return customerDAO.getCustomer(id, password);
     }

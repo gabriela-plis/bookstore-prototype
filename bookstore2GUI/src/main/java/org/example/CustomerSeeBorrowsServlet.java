@@ -14,7 +14,7 @@ import static org.example.RedirectUtils.redirect;
 @WebServlet("/seeBorrowsBooks")
 public class CustomerSeeBorrowsServlet extends HttpServlet implements SessionConsumer {
 
-    private CustomerFacade customerFacade;
+    private final CustomerFacade customerFacade = FacadeSingletons.getCustomerFacade();
     private int customerID;
 
     @Override
@@ -33,7 +33,6 @@ public class CustomerSeeBorrowsServlet extends HttpServlet implements SessionCon
     @Override
     public void getSessionAttributes(HttpServletRequest request) {
         HttpSession session = getSession(request);
-        this.customerFacade = (CustomerFacade) session.getAttribute("customerFacade");
         this.customerID = (int) session.getAttribute("customerID");
     }
 }

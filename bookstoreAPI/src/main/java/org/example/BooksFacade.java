@@ -11,6 +11,10 @@ public class BooksFacade {
         this.booksDAO = new BooksDAO();
     }
 
+    public BooksFacade (String DB_URL, String DB_USER, String DB_PASS) {
+        this.booksDAO = new BooksDAO(DB_URL, DB_USER, DB_PASS);
+    }
+
     public List<Book> getAvailableBooksToBorrow (int customerID) {
         return booksDAO.getAvailableBooksToBorrow(customerID);
     }

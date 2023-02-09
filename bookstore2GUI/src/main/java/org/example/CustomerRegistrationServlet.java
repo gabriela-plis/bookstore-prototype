@@ -10,7 +10,7 @@ import static org.example.RedirectUtils.redirect;
 @WebServlet("/customerRegistration")
 public class CustomerRegistrationServlet extends HttpServlet implements SessionCreator {
 
-    private CustomerFacade customerFacade;
+    private final CustomerFacade customerFacade = FacadeSingletons.getCustomerFacade();
     private int customerID;
 
     @Override
@@ -20,7 +20,6 @@ public class CustomerRegistrationServlet extends HttpServlet implements SessionC
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        customerFacade = new CustomerFacade();
 
         customerID = customerFacade.register(request.getParameter("firstName"), request.getParameter("lastName"), request.getParameter("phone"), request.getParameter("password"), request.getParameter("email"));
 
@@ -39,8 +38,6 @@ public class CustomerRegistrationServlet extends HttpServlet implements SessionC
 
     @Override
     public void setSessionAttributes(HttpServletRequest request, HttpSession session) {
-        session.setAttribute("customerID", customerID);
-        session.setAttribute("customerFacade", customerFacade);
         session.setAttribute("booksFacade", new BooksFacade());
     }
 }

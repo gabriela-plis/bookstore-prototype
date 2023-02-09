@@ -13,7 +13,7 @@ import static org.example.RedirectUtils.redirect;
 @WebServlet("/customerLogIn")
 public class CustomerLogInServlet extends HttpServlet implements SessionCreator {
 
-    private CustomerFacade customerFacade;
+    private final CustomerFacade customerFacade = FacadeSingletons.getCustomerFacade();
     private int customerID;
 
     @Override
@@ -24,7 +24,6 @@ public class CustomerLogInServlet extends HttpServlet implements SessionCreator 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        customerFacade = new CustomerFacade();
         Customer customer = customerFacade.getCustomer(Integer.parseInt(request.getParameter("ID")), request.getParameter("password"));
 
         if (customer != null) {
@@ -34,7 +33,6 @@ public class CustomerLogInServlet extends HttpServlet implements SessionCreator 
             HttpSession session = createSession(request);
             setSessionAttributes(request, session);
 
-//            UserSingletons.setCustomer(customer);
             response.sendRedirect("/bookstore/customerMenu");
 
         } else {
@@ -46,7 +44,5 @@ public class CustomerLogInServlet extends HttpServlet implements SessionCreator 
     @Override
     public void setSessionAttributes(HttpServletRequest request, HttpSession session) {
         session.setAttribute("customerID", customerID);
-        session.setAttribute("customerFacade", customerFacade);
-        session.setAttribute("booksFacade", new BooksFacade());
     }
 }
